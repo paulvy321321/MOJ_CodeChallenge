@@ -1,4 +1,3 @@
-
 import com.google.common.collect.Sets;
 import org.dts.oyster.enums.UserTravelMode;
 import org.dts.oyster.enums.Zone;
@@ -9,9 +8,9 @@ import org.junit.Test;
 
 
 public class OysterFareSystemTest {
-	private RuleSystem ruleSystem = new RuleSystem();
+	private final RuleSystem ruleSystem = new RuleSystem();
 
-	private FareCalculator fareCalculator = new FareCalculator();
+	private static final FareCalculator fareCalculator = new FareCalculator();
 
 	@Before
 	public void setup() {
@@ -62,28 +61,40 @@ public class OysterFareSystemTest {
 		fareCalculator.setRuleSystem(ruleSystem);
 	}
 
+
 	@Test
-	public void testJourney() {
+	//• Tube: Holborn to Earl’s Court
+	public void journey1() {
+		UserCardBean userCardBean = getUserCardBean();
+		userCardBean.swipeCard(new Station("Holborn", Sets.newHashSet(Zone.ONE)), UserTravelMode.Tube);
+		userCardBean.swipeCard(new Station("Earl's Court", Sets.newHashSet(Zone.ONE, Zone.TWO)), null);
+		System.out.println("User card balance after Tube: Holborn to Earl’s Court journey :  " + userCardBean.getBalance());
+	}
+
+	@Test
+	public void journey2() {
+		//• 328 bus from Earl’s Court to Chelsea
+		UserCardBean userCardBean = getUserCardBean();
+		userCardBean.swipeCard(new Station("Chelsea", Sets.newHashSet()), UserTravelMode.Bus);
+		userCardBean.swipeCard(new Station("Earl's Court", Sets.newHashSet(Zone.ONE, Zone.TWO)), null);
+		System.out.println("User card balance after 328 bus from Earl’s Court to Chelsea journey :  " + userCardBean.getBalance());
+	}
+
+	//• Tube: Earl’s Court to Hammersmith
+	@Test
+	public void journey3() {
+		UserCardBean userCardBean = getUserCardBean();
+		userCardBean.swipeCard(new Station("Earl's Court", Sets.newHashSet(Zone.ONE, Zone.TWO)), UserTravelMode.Tube);
+		userCardBean.swipeCard(new Station("HammerSmith", Sets.newHashSet(Zone.TWO)), null);
+		System.out.println("User card balance after Tube: Earl’s Court to Hammersmith journey :   " + userCardBean.getBalance());
+	}
+
+	private static UserCardBean getUserCardBean() {
 		UserCardListener userCardListener = new UserCardListener(fareCalculator);
 		UserCardBean userCardBean = new UserCardBean();
 		userCardBean.addPropertyChangeListener(userCardListener);
 		userCardBean.credit(30.0);
-
-		//• Tube: Holborn to Earl’s Court
-		userCardBean.swipeCard(new Station("Holborn", Sets.newHashSet(Zone.ONE)), UserTravelMode.Tube);
-		userCardBean.swipeCard(new Station("Earl's Court", Sets.newHashSet(Zone.ONE, Zone.TWO)), null);
-		System.out.println("User card balance after Tube: Holborn to Earl’s Court journey :  " + userCardBean.getBalance());
-
-		//• 328 bus from Earl’s Court to Chelsea
-		userCardBean.swipeCard(new Station("Chelsea", Sets.newHashSet()), UserTravelMode.Bus);
-		userCardBean.swipeCard(new Station("Earl's Court", Sets.newHashSet(Zone.ONE, Zone.TWO)), null);
-		System.out.println("User card balance after 328 bus from Earl’s Court to Chelsea journey :  " + userCardBean.getBalance());
-
-		//• Tube: Earl’s Court to Hammersmith
-		userCardBean.swipeCard(new Station("Earl's Court", Sets.newHashSet(Zone.ONE, Zone.TWO)), UserTravelMode.Tube);
-		userCardBean.swipeCard(new Station("HammerSmith", Sets.newHashSet(Zone.TWO)), null);
-		System.out.println("User card balance after Tube: Earl’s Court to Hammersmith journey :   " + userCardBean.getBalance());
-
+		return userCardBean;
 	}
 
 }
