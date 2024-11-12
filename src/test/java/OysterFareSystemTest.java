@@ -63,33 +63,26 @@ public class OysterFareSystemTest {
 
 
 	@Test
-	//• Tube: Holborn to Earl’s Court
-	public void journey1() {
+
+	public void journey() {
+		//• Tube: Holborn to Earl’s Court
 		UserCardBean userCardBean = getUserCardBean();
 		userCardBean.swipeCard(new Station("Holborn", Sets.newHashSet(Zone.ONE)), UserTravelMode.Tube);
 		userCardBean.swipeCard(new Station("Earl's Court", Sets.newHashSet(Zone.ONE, Zone.TWO)), null);
 		System.out.println("User card balance after Tube: Holborn to Earl’s Court journey :  " + userCardBean.getBalance());
-	}
 
-	@Test
-	public void journey2() {
 		//• 328 bus from Earl’s Court to Chelsea
-		UserCardBean userCardBean = getUserCardBean();
 		userCardBean.swipeCard(new Station("Chelsea", Sets.newHashSet()), UserTravelMode.Bus);
 		userCardBean.swipeCard(new Station("Earl's Court", Sets.newHashSet(Zone.ONE, Zone.TWO)), null);
 		System.out.println("User card balance after 328 bus from Earl’s Court to Chelsea journey :  " + userCardBean.getBalance());
-	}
 
-	//• Tube: Earl’s Court to Hammersmith
-	@Test
-	public void journey3() {
-		UserCardBean userCardBean = getUserCardBean();
+		//• Tube: Earl’s Court to Hammersmith
 		userCardBean.swipeCard(new Station("Earl's Court", Sets.newHashSet(Zone.ONE, Zone.TWO)), UserTravelMode.Tube);
 		userCardBean.swipeCard(new Station("HammerSmith", Sets.newHashSet(Zone.TWO)), null);
 		System.out.println("User card balance after Tube: Earl’s Court to Hammersmith journey :   " + userCardBean.getBalance());
 	}
 
-	private static UserCardBean getUserCardBean() {
+	private UserCardBean getUserCardBean() {
 		UserCardListener userCardListener = new UserCardListener(fareCalculator);
 		UserCardBean userCardBean = new UserCardBean();
 		userCardBean.addPropertyChangeListener(userCardListener);
